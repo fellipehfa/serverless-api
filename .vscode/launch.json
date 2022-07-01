@@ -1,0 +1,78 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "run function",
+      "cwd": "${workspaceFolder}/services/unities",
+      "program": "${workspaceRoot}/node_modules/.bin/sls",
+      "envFile": "${workspaceRoot}/.vscode/.env",
+      "runtimeArgs": [
+        "--preserve-symlinks",
+      ],
+      "args": [
+        "invoke",
+        "local",
+        "-f",
+        "getCoordinatorsInfo", // function name
+        "--data",
+        "{\"body\":\"{}\"}"
+      ]
+    },
+    {
+      "name": "debug serverless offline",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/services/users",
+      "program": "${workspaceRoot}/node_modules/.bin/sls",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "debug"
+      ],
+      "port": 9229
+    },
+    {
+      "name": "Debuger: sls offline",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/services/campaignUsers",
+      "runtimeVersion": "default",
+      "env": {
+        "NODE_ENV": "development",
+        "SLS_DEBUG": "*",
+      },
+      "runtimeArgs": [
+        "--preserve-symlinks",
+        "node_modules/.bin/serverless",
+        "offline",
+        "start",
+        "--httpPort",
+        "4004",
+        "--skipCacheInvalidation",
+        "--noPrependStageInUrl"
+      ],
+      "port": 9229,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Debuger: medcel_serverless",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "dev"
+      ],
+      "port": 9229,
+      "console": "integratedTerminal"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+org: fellipe
+app: serverless-api
+service: serverless-api
+
+plugins:
+  - serverless-bundle
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 256
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1  
+
+resources:
+  Resources:
+    CandidatesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: CandidatesTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+functions:
+  createCandidate:
+    handler: src/handlers/createCandidate.handler
+    events:
+      - http:
+          method: POST
+          path: /candidate
