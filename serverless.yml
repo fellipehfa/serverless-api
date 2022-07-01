@@ -11,21 +11,13 @@ provider:
   runtime: nodejs14.x
   memorySize: 256
   stage: ${opt:stage, 'dev'}
-  region: us-east-1  
+  region: us-east-1
+  iamRoleStatements:
+    - ${file(iam/CandidatesTableIAM.yml):CandidatesTableIAM}
 
 resources:
   Resources:
-    CandidatesTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: CandidatesTable
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
+    CandidatesTable: ${file(resources/CandidatesTable.yml):CandidatesTable}
 
 functions:
   createCandidate:

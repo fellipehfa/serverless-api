@@ -1,0 +1,11 @@
+CandidatesTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: CandidatesTable
+    BillingMode: PAY_PER_REQUEST
+    AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+    KeySchema:
+      - AttributeName: id
+        KeyType: HASH
