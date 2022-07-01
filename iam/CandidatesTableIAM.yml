@@ -2,5 +2,9 @@ CandidatesTableIAM:
   Effect: Allow
   Action: 
     - dynamodb:PutItem
+    - dynamodb:Scan
+    - dynamodb:GetItem
+    - dynamodb:UpdateItem
+    - dynamodb:Query
   Resource: 
-    - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/CandidatesTable
+    - ${self:custom.CandidatesTable.arn}

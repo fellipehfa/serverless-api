@@ -8,10 +8,12 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs12.x
   memorySize: 256
   stage: ${opt:stage, 'dev'}
   region: us-east-1
+  environment:
+    CANDIDATES_TABLE_NAME: ${self:custom.CandidatesTable.name}
   iamRoleStatements:
     - ${file(iam/CandidatesTableIAM.yml):CandidatesTableIAM}
 
@@ -25,4 +27,17 @@ functions:
     events:
       - http:
           method: POST
-          path: /candidate
+          path: /candidates
+  listCandidates:
+    handler: src/handlers/listCandidates.handler
+    events:
+      - http:
+          method: GET
+          path: /candidates
+
+custom:
+  CandidatesTable:
+    name: !Ref CandidatesTable
+    arn: !GetAtt  CandidatesTable.Arn
+  bundle:
+    linting: false
