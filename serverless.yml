@@ -13,31 +13,43 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   environment:
-    CANDIDATES_TABLE_NAME: ${self:custom.CandidatesTable.name}
+    AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
   iamRoleStatements:
-    - ${file(iam/CandidatesTableIAM.yml):CandidatesTableIAM}
+    - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
 
 resources:
   Resources:
-    CandidatesTable: ${file(resources/CandidatesTable.yml):CandidatesTable}
+    AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
 
 functions:
-  createCandidate:
-    handler: src/handlers/createCandidate.handler
+  createAuction:
+    handler: src/handlers/createAuction.handler
     events:
       - http:
           method: POST
-          path: /candidates
-  listCandidates:
-    handler: src/handlers/listCandidates.handler
+          path: /auctions
+  getAuctions:
+    handler: src/handlers/getAuctions.handler
     events:
       - http:
           method: GET
-          path: /candidates
+          path: /auctions
+  getAuction:
+    handler: src/handlers/getAuction.handler
+    events:
+      - http:
+          method: GET
+          path: /auction/{id}
+  placeBid:
+    handler: src/handlers/placeBid.handler
+    events:
+      - http:
+          method: PATCH
+          path: /auction/{id}/bid
 
 custom:
-  CandidatesTable:
-    name: !Ref CandidatesTable
-    arn: !GetAtt  CandidatesTable.Arn
+  AuctionsTable:
+    name: !Ref AuctionsTable
+    arn: !GetAtt  AuctionsTable.Arn
   bundle:
     linting: false

@@ -1,4 +1,4 @@
-CandidatesTableIAM:
+AuctionsTableIAM:
   Effect: Allow
   Action: 
     - dynamodb:PutItem
@@ -7,4 +7,4 @@ CandidatesTableIAM:
     - dynamodb:UpdateItem
     - dynamodb:Query
   Resource: 
-    - ${self:custom.CandidatesTable.arn}
+    - ${self:custom.AuctionsTable.arn}
