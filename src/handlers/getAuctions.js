@@ -5,16 +5,25 @@ import createError from 'http-errors';
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function getAuctions(event, context) {
+  const { status } = event.queryStringParameters;
 
   const params = {
     TableName: process.env.AUCTIONS_TABLE_NAME,
+    IndexName: 'statusAndEndDate',
+    KeyConditionExpression: '#status = :status',
+    ExpressionAttributeValues: {
+      ':status': status,
+    },
+    ExpressionAttributeNames: {
+      '#status': 'status',
+    },
   };
 
-  let allAuctions;
+  let auctions = {};
 
   try{
-    const result = await dynamodb.scan(params).promise();
-    allAuctions = result.Items;
+    const result = await dynamodb.query(params).promise();
+    auctions = result.Items;
   } catch(err) {
     console.log(err);
     throw new createError.InternalServerError(err);
@@ -22,7 +31,7 @@ async function getAuctions(event, context) {
 
   return {
     statusCode: 200,
-    body: JSON.stringify(allAuctions)
+    body: JSON.stringify(auctions)
   };
 };
 

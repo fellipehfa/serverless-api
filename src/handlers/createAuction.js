@@ -8,6 +8,8 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 async function createAuction(event, context) {
   const { title } = event.body;
   const now = new Date();
+  const endDate = new Date();
+  endDate.setHours(now.getHours() + 1);
 
   if (!title) throw new createError.BadRequest('A title is required!')
 
@@ -16,6 +18,7 @@ async function createAuction(event, context) {
     title,
     status: 'OPEN',
     createAt: now.toISOString(),
+    endingAt: endDate.toISOString(),
     highestBid: {
       amount: 0
     }
