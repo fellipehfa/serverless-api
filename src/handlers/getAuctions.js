@@ -1,11 +1,14 @@
 import AWS from 'aws-sdk';
-import commonMiddleware from '../lib/commonMiddleware';
 import createError from 'http-errors';
+import validator from '@middy/validator';
+import commonMiddleware from '../lib/commonMiddleware';
+import getAuctionsSchema from '../lib/schemas/getAuctionsSchema';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function getAuctions(event, context) {
   const { status } = event.queryStringParameters;
+  let auctions;
 
   const params = {
     TableName: process.env.AUCTIONS_TABLE_NAME,
@@ -18,8 +21,6 @@ async function getAuctions(event, context) {
       '#status': 'status',
     },
   };
-
-  let auctions = {};
 
   try{
     const result = await dynamodb.query(params).promise();
@@ -35,4 +36,8 @@ async function getAuctions(event, context) {
   };
 };
 
-export const handler = commonMiddleware(getAuctions);
+export const handler = commonMiddleware(getAuctions)
+  .use(validator({ 
+    inputSchema: getAuctionsSchema,
+    useDefaults: true,
+  }));
